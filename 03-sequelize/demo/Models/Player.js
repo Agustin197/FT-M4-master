@@ -61,3 +61,5 @@ module.exports = sequelize => {
     updatedAt: 'actualizado'
   });
 }
+
+//modelo 
