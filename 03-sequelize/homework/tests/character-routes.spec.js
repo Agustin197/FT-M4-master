@@ -49,13 +49,13 @@ describe('Character Routes', () => {
       const p2Character = Character.create({code: 'TWO', name: 'Second', hp: 135.0, mana: 40.0, race: 'Machine', age: 20});
       const p3Character = Character.create({code: 'THREE', name: 'Third', hp: 110.0, mana: 110.0, race: 'Human', age: 23});
       const [p1, p2, p3] = await Promise.all([p1Character, p2Character, p3Character]);
-      // await Promise.all([
-      //   p1.createRole({name: 'Tank'}),
-      //   p1.createRole({name: 'Top'}),
-      //   p2.createRole({name: 'Jungle'}),
-      //   p3.createRole({name: 'Mid'}),
-      //   p3.createRole({name: 'Support'})
-      // ]);
+      await Promise.all([
+        p1.createRole({name: 'Tank'}),
+        p1.createRole({name: 'Top'}),
+        p2.createRole({name: 'Jungle'}),
+        p3.createRole({name: 'Mid'}),
+        p3.createRole({name: 'Support'})
+      ]);
     })
 
     describe('Parte UNO', () => {
@@ -63,13 +63,13 @@ describe('Character Routes', () => {
         const res = await request(app).get('/character');
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual([
-          {code: 'ONE', name: 'First', hp: 90.0, mana: 150.0, age: 27, date_added: new Date().toISOString().split('T')[0], race: 'Human'},
-          {code: 'TWO', name: 'Second', hp: 135.0, mana: 40.0, age: 20, date_added: new Date().toISOString().split('T')[0], race: 'Machine'},
-          {code: 'THREE', name: 'Third', hp: 110.0, mana: 110.0, age: 23, date_added: new Date().toISOString().split('T')[0], race: 'Human'}
+          {code: 'ONE', name: 'First', hp: 90.0, mana: 150.0, age: "27 years old", date_added: new Date().toISOString().split('T')[0], race: 'Human'},
+          {code: 'TWO', name: 'Second', hp: 135.0, mana: 40.0, age: "20 years old", date_added: new Date().toISOString().split('T')[0], race: 'Machine'},
+          {code: 'THREE', name: 'Third', hp: 110.0, mana: 110.0, age: "23 years old", date_added: new Date().toISOString().split('T')[0], race: 'Human'}
         ])
       })
   
-      it('EXTRA: should return status 200 and the list of all characters with certain attributes', async () => {
+      xit('EXTRA: should return status 200 and the list of all characters with certain attributes', async () => {
         const res = await request(app).get('/character?name=true&hp=true');
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual([
@@ -98,7 +98,7 @@ describe('Character Routes', () => {
         const res = await request(app).get('/character/TWO');
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual(
-          {code: 'TWO', name: 'Second', hp: 135.0, mana: 40.0, age: 20, date_added: new Date().toISOString().split('T')[0], race: 'Machine'}
+          {code: 'TWO', name: 'Second', hp: 135.0, mana: 40.0, age: "20 years old", date_added: new Date().toISOString().split('T')[0], race: 'Machine'}
         )
       })
     })
@@ -109,7 +109,7 @@ describe('Character Routes', () => {
         const res = await request(app).get('/character?race=Human&age=27');
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual([
-          expect.objectContaining({code: 'ONE', name: 'First', hp: 90.0, race: 'Human', age: 27})
+          expect.objectContaining({code: 'ONE', name: 'First', hp: 90.0, race: 'Human', age: "27 years old"})
         ])
       })
   
@@ -117,8 +117,8 @@ describe('Character Routes', () => {
         const res = await request(app).get('/character/young');
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual([
-          expect.objectContaining({code: 'TWO', name: 'Second', hp: 135.0, race: 'Machine', age: 20}),
-          expect.objectContaining({code: 'THREE', name: 'Third', hp: 110.0, race: 'Human', age: 23}),
+          expect.objectContaining({code: 'TWO', name: 'Second', hp: 135.0, race: 'Machine', age: "20 years old"}),
+          expect.objectContaining({code: 'THREE', name: 'Third', hp: 110.0, race: 'Human', age: "23 years old"}),
         ])
       })
   
@@ -129,10 +129,10 @@ describe('Character Routes', () => {
         await Promise.all([five, six, seven]);
         const res = await request(app).put('/character/age?value=40');
         const characters = await Character.findAll();
-        const with40years = characters.filter(c => c.age === 40);
+        const with40years = characters.filter(c => c.age === "40 years old");
         expect(with40years).toEqual([
-          expect.objectContaining({code: 'FIVE', age: 40}),
-          expect.objectContaining({code: 'SEVEN', age: 40})
+          expect.objectContaining({code: 'FIVE', age: "40 years old"}),
+          expect.objectContaining({code: 'SEVEN', age: "40 years old"})
         ])
         expect(res.text).toBe('Personajes actualizados');
       })
