@@ -18,16 +18,43 @@ try {
 })
 
 router.get("/", async function(req,res){
-  const {race} = req.query;
+  const {race, age } = req.query;
+  let personaje;
   if(!race) {
-    const personaje = await Character.findAll()
+    personaje = await Character.findAll()
+  }
+  else if(!age){
+    personaje = await Character.findAll({where:{race}})
+  }
+  else {
+    personaje = await Character.findAll({where:{race,age }})
+  }
   return res.status(200).send(personaje)
-  }
-  else{
-    const personaje = await Character.findAll({where:{race}})
-    return res.status(200).send(personaje)
-  }
 })
+
+router.get("/young",function(req,res){
+  Character.findAll({
+    where:{
+      age:{[Op.lt]: 25}
+    }
+  })
+  .then(respuesta => res.send(respuesta))
+  .catch(e => res.status(404).send(e))
+})
+
+router.get("/roles/:code",async(req,res)=>{
+const {code} = req.params
+try{
+  let char = await Character.findOne({
+    where:{code},
+    include: Role
+  })
+  res.send(char)
+} catch(error){
+  res.status(404).send(error)
+}
+})
+
 
 router.get("/:code", async function (req,res){
   const {code} = req.params
@@ -38,7 +65,34 @@ router.get("/:code", async function (req,res){
   else {
     return res.status(200).send(data)
   }
+});
+
+router.put("/addAbilities",async(req,res)=>{
+const {abilities,codeCharacter} = req.body
+try {
+  let char = await Character.findByPk(codeCharacter)
+  let arraypromesa = abilities.map(elem => char.createAbility(elem))
+  await Promise.all(arraypromesa)
+  res.send("abilities añadidas")
+} catch (error) {
+  res.status(404).send(error)
+}
+
 })
 
+router.put("/:attribute",async(req,res)=>{
+  const {attribute} = req.params
+  const {value} = req.query
+  try {
+    await Character.update({[attribute]:value},{
+      where:{
+        [attribute] : null
+      }
+    })
+    res.send("Personajes actualizados")
+  } catch (error) {
+    res.status(404).send(error)
+  }
+})
 
 

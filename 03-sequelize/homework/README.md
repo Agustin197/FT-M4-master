@@ -112,7 +112,11 @@ IMPORTANTE: Esto hará que rompan algunos tests anteriores que esperaban solamen
 
 ### Virtual Field
 
-Ahora crearemos un campo virtual para el modelo de Ability que será como un mini resumen de la habilidad y lo llamaremos "summary", deberá retornar "${name} (${mana_cost} points of mana) - Description: ${description}" (La mana tienen que ser solo la parte entera).
+Ahora crearemos un campo virtual para el modelo de Ability que será como un mini resumen de la habilidad y lo llamaremos "summary", deberá retornar 
+```js
+"${name} (${mana_cost} points of mana) - Description: ${description}" 
+```
+(La mana tienen que ser solo la parte entera).
 
 ### Validations
 

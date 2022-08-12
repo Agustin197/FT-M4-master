@@ -13,8 +13,18 @@ module.exports = sequelize => {
     mana_cost:{
       type: DataTypes.FLOAT,
       allowNull: false,
-      unique: "compositeIndex"
+      unique: "compositeIndex",
+      validate:{
+        min: 10,
+        max: 250
+      }
     },
+    summary:{
+      type: DataTypes.VIRTUAL,
+      get(){
+        return `${this.name} (${this.mana_cost} points of mana) - Description: ${this.description}` 
+      }
+    }
   })
 }
 
